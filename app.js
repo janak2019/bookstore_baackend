@@ -20,7 +20,9 @@ app.use(
   })
 );
 app.get("/",(req,res)=>{
-    res.send("Hello From Nodejs")
+    res.status(201).json({
+        message:"Hello From Nodejs"
+})
 })
 
 //book create
