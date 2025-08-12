@@ -62,6 +62,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
 
         res.status(201).json({
             message: "Book created successfully",
+            bookId: newBook._id, // Include the ID
         });
 
     } catch (err) {
