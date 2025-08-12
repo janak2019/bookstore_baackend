@@ -21,7 +21,7 @@ app.use(
 );
 app.get("/",(req,res)=>{
     res.status(201).json({
-        message:"Hello From Nodejs"
+        message:"Nodejs started"
 })
 })
 
