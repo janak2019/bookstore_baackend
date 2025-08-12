@@ -29,9 +29,9 @@ app.post("/book", upload.single("image"), async (req, res) => {
 
     try {
         if (!req.file) {
-            fileName = "/storage/staticbook.jpg";
+            fileName = "staticbook.jpg";
         } else {
-            fileName = `/storage/${req.file.filename}`
+            fileName = req.file.filename
         }
 
         const {
