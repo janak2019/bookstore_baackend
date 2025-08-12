@@ -31,7 +31,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
         if (!req.file) {
             fileName = "staticbook.jpg";
         } else {
-            fileName ="https://bookstore-backend-hm71.onrender.com"+ req.file.filename
+            fileName = req.file.filename
         }
 
         const {
@@ -56,7 +56,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
             authorName,
             publishedAt,
             publication,
-            bookImagePath: fileName,
+            bookImagePath: "https://bookstore-backend-hm71.onrender.com"+ fileName,
         });
 
         res.status(201).json({
