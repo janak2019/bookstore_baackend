@@ -31,7 +31,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
         if (!req.file) {
             fileName = "staticbook.jpg";
         } else {
-            fileName = req.file.filename
+            fileName ="https://bookstore-backend-hm71.onrender.com"+ req.file.filename
         }
 
         const {
