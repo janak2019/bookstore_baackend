@@ -14,7 +14,7 @@ const upload = require('./middleware/multerConfig');
 const path = require('path');
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://192.168.1.86:5173","https://bookstore-frontend-murex-mu.vercel.app"], // frontend URLs
+    origin: ["https://bookstore-frontend-murex-mu.vercel.app/"], // frontend URLs
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true, // only if using cookies
   })
