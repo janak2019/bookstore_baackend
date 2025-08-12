@@ -14,7 +14,7 @@ const upload = require('./middleware/multerConfig');
 const path = require('path');
 app.use(
   cors({
-    origin: ["https://bookstore-frontend-murex-mu.vercel.app/"], // frontend URLs
+    origin: ["https://bookstore-frontend-murex-mu.vercel.app"], // frontend URLs
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true, // only if using cookies
   })
@@ -216,7 +216,7 @@ app.patch("/book/:id", upload.single("image"), async (req, res) => {
 
         if (req.file) {
             // Delete old image
-            const localHostUrlLength = "http://localhost:3000/".length;
+            const localHostUrlLength = "https://bookstore-frontend-murex-mu.vercel.app/".length;
             const relativePath = oldData.bookImagePath.slice(localHostUrlLength);
 
             fs.unlink(path.join("storage", relativePath), (err) => {
@@ -225,7 +225,7 @@ app.patch("/book/:id", upload.single("image"), async (req, res) => {
             });
 
             // Set new image path
-            fileName = "http://localhost:3000/" + req.file.filename;
+            fileName = "https://bookstore-frontend-murex-mu.vercel.app/" + req.file.filename;
         }
 
         // Update book
