@@ -27,13 +27,12 @@ app.get("/",(req,res)=>{
 
 //book create
 app.post("/book", upload.single("image"), async (req, res) => {
-    let fileName;
+    let fileName = "staticbook.jpg"; // default image
 
     try {
-        if (!req.file) {
-            fileName = "staticbook.jpg";
-        } else {
-            fileName = req.file.filename
+        // Use uploaded filename if provided
+        if (req.file && req.file.filename) {
+            fileName = req.file.filename;
         }
 
         const {
@@ -45,12 +44,12 @@ app.post("/book", upload.single("image"), async (req, res) => {
             publication
         } = req.body;
 
-        // Example validation (you can expand this)
+        // Basic validation
         if (!bookName || !bookPrice) {
             throw new Error("Book name and price are required");
         }
 
-        // Create book entry in DB
+        // Create new book entry
         await Book.create({
             bookName,
             bookPrice,
@@ -58,7 +57,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
             authorName,
             publishedAt,
             publication,
-            bookImagePath: "https://bookstore-backend-hm71.onrender.com/" + fileName,
+            bookImagePath: `https://bookstore-backend-hm71.onrender.com/${fileName}`,
         });
 
         res.status(201).json({
@@ -68,11 +67,10 @@ app.post("/book", upload.single("image"), async (req, res) => {
     } catch (err) {
         console.error("Error creating book:", err.message);
 
-        // If image was uploaded, remove it on error
-        if (req.file) {
-            const uploadedPath = path.join("storage", req.file.filename);
+        // If an image was uploaded, clean up on error
+        if (req.file && req.file.filename) {
             try {
-                await fs.unlink(uploadedPath);
+                await fs.unlink(path.join("storage", req.file.filename));
                 console.log("Uploaded image deleted due to error");
             } catch (unlinkErr) {
                 console.error("Error deleting uploaded image:", unlinkErr.message);
