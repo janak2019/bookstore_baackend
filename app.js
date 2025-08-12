@@ -195,9 +195,12 @@ app.patch("/book/:id", upload.single("image"), async (req, res) => {
         if (!oldData) {
             // Delete uploaded file if book doesn't exist
             if (req.file) {
-                fs.unlink(path.join("storage", req.file.filename), (err) => {
-                    if (err) console.error("Error deleting uploaded image:", err);
-                });
+                try {
+                    await fs.unlink(path.join("storage", req.file.filename));
+                    console.log("Uploaded image deleted because book not found");
+                } catch (err) {
+                    console.error("Error deleting uploaded image:", err);
+                }
             }
 
             return res.status(404).json({ message: "Book not found" });
@@ -212,20 +215,20 @@ app.patch("/book/:id", upload.single("image"), async (req, res) => {
             authorName,
         } = req.body;
 
-        let fileName = oldData.bookImagePath; // default: keep old image path
+        let fileName = oldData.bookImagePath; // Keep old image path by default
 
-        if (req.file) {
+        if (req.file && req.file.filename) {
             // Delete old image
-            const localHostUrlLength = "https://bookstore-frontend-murex-mu.vercel.app/".length;
-            const relativePath = oldData.bookImagePath.slice(localHostUrlLength);
-
-            fs.unlink(path.join("storage", relativePath), (err) => {
-                if (err) console.error("Error deleting old image:", err);
-                else console.log("Old image deleted successfully");
-            });
+            try {
+                const oldFilename = path.basename(oldData.bookImagePath);
+                await fs.unlink(path.join("storage", oldFilename));
+                console.log("Old image deleted successfully");
+            } catch (err) {
+                console.error("Error deleting old image:", err);
+            }
 
             // Set new image path
-            fileName = "https://bookstore-frontend-murex-mu.vercel.app/" + req.file.filename;
+            fileName = `https://bookstore-frontend-murex-mu.vercel.app/${req.file.filename}`;
         }
 
         // Update book
@@ -244,11 +247,14 @@ app.patch("/book/:id", upload.single("image"), async (req, res) => {
     } catch (err) {
         console.error("Update error:", err);
 
-        // If error occurs after file is uploaded, remove file
-        if (req.file) {
-            fs.unlink(path.join("storage", req.file.filename), (err) => {
-                if (err) console.error("Error cleaning up uploaded image:", err);
-            });
+        // Cleanup uploaded image if error occurred
+        if (req.file && req.file.filename) {
+            try {
+                await fs.unlink(path.join("storage", req.file.filename));
+                console.log("Uploaded image deleted due to error");
+            } catch (cleanupErr) {
+                console.error("Error cleaning up uploaded image:", cleanupErr);
+            }
         }
 
         res.status(500).json({ message: "Server error" });
