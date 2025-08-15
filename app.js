@@ -57,7 +57,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
             authorName,
             publishedAt,
             publication,
-            bookImagePath: `https://bookstore-backend-hm71.onrender.com/${fileName}`,
+            bookImagePath: fileName,
         });
 
         res.status(201).json({
