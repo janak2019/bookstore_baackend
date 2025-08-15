@@ -45,7 +45,7 @@ app.post("/book", upload.single("image"), async (req, res) => {
         } = req.body;
 
         // Basic validation
-        if (!bookName || !bookPrice) {
+        if (!bookName || !bookPrice || !isbnNumber || !authorName || !publishedAt || !publication ) {
             throw new Error("Book name and price are required");
         }
 
@@ -103,6 +103,7 @@ app.get("/book",async(req,res)=>{
 })
 // single book fetch
 const mongoose = require("mongoose");
+const { publicDecrypt } = require('crypto');
 
 app.get("/book/:id", async (req, res) => {
     
