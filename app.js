@@ -6,7 +6,7 @@ const fs = require('fs').promises
 const cors = require("cors");
 
 app.use(express.json())
-app.use(express.urlencoded({extended : true}))
+
 
 require('dotenv').config();
 connectDB(process.env.MONGO_URI)
